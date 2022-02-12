@@ -5,6 +5,7 @@ package com.vobi.bank.repository;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ class CustomerRepositoryIT {
 	DocumentTypeRepository documentTypeRepository;
 	
 	@Test
+	@Order(1)
 	void debeValidarLasDependencias() {
 		assertNotNull(customerRepository);
 
@@ -39,57 +41,42 @@ class CustomerRepositoryIT {
 	 
 
 	@Test
-
+	@Order(2)
 	void debeCrearUnCustomer() {
-
 	//Arrange
-
 	Integer idDocumentType=1;
-
 	Integer idCustomer=14836554;
-
-	 
-
 	Customer customer=null;
-
 	DocumentType documentType=documentTypeRepository.findById(idDocumentType).get();
-
-	 
-
 	customer=new Customer();
-
 	customer.setAddress("Avenida siempre viva 123");
-
 	customer.setCustId(idCustomer);
-
 	customer.setDocumentType(documentType);
-
 	customer.setEmail("hjsimpson@gmail.com");
-
 	customer.setEnable("Y");
-
 	customer.setName("Homero J Simpson");
-
 	customer.setPhone("55555555555");
-
 	customer.setToken("sdfsfdgsjkfhsjkdhfsjk");
 
-	 
+	//Act
+	customer=customerRepository.save(customer);
+	//Assert
+	assertNotNull(customer,"El customer es nulo no se pudo grabar");
+	}
+	
+	@Test
+	@Order(3)
+	void debeModificarUnCustomer() {
+	//Arrange
+	Integer idCustomer=14836554;
+	Customer customer=null;
+	customer=customerRepository.findById(idCustomer).get();
+	customer.setEnable("N");
 
 	//Act
-
-	 
-
 	customer=customerRepository.save(customer);
-
-	 
-
 	//Assert
-
-	 
-
-	assertNotNull(customer,"El customer es nulo no se pudo grabar");
-
+	assertNotNull(customer,"El customer es nulo no se pudo modificar");
 	}
 
 }
